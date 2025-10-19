@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const joinGameBtn = document.getElementById('join-game');
     const roomInput = document.getElementById('room-input');
     const gameStatus = document.getElementById('game-status');
+    const rematchControls = document.getElementById('rematch-controls');
+    const rematchButton = document.getElementById('rematch-button');
     let currentRoom = '';
     let playerColor = '';
 
@@ -52,6 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    rematchButton.addEventListener('click', () => {
+        if (currentRoom) {
+            socket.emit('rematch', { room: currentRoom });
+            gameStatus.textContent = 'Rematch request sent. Waiting for opponent...';
+        }
+    });
+
     socket.on('game_created', (data) => {
         console.log('Game created event received:', data);
         currentRoom = data.room;
@@ -93,7 +102,25 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('game_over', (data) => {
         console.log('Game over event received:', data);
         gameStatus.textContent = `Game over! ${data.winner.charAt(0).toUpperCase() + data.winner.slice(1)} wins!`;
-        currentRoom = '';
+        rematchControls.style.display = 'block';
+    });
+
+    socket.on('rematch_request', (data) => {
+        if (confirm('Your opponent wants a rematch! Do you accept?')) {
+            socket.emit('reset_game', { room: data.room });
+        }
+    });
+
+    socket.on('game_reset', (data) => {
+        // Reset the game board visually
+        const cells = document.querySelectorAll('.cell');
+        cells.forEach(cell => {
+            cell.classList.remove('red', 'yellow');
+        });
+        // Hide the rematch button
+        rematchControls.style.display = 'none';
+        // Update the game status
+        gameStatus.textContent = `Game reset! It is ${data.turn}'s turn.`;
     });
 
     socket.on('error', (data) => {
