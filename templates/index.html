@@ -18,7 +18,12 @@
     <div id="game-status">Enter a room name to begin.</div>
     <div id="game-board"></div>
 
+    <div id="game-over-controls" style="display: none;">
+        <button id="rematch-btn">Rematch</button>
+        <button id="new-game-btn">New Game</button>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
-</html>
+</html>`
