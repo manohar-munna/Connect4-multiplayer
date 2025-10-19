@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect 4</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Connect 4</h1>
+
+    <div id="game-controls">
+        <input type="text" id="room-input" placeholder="Enter a room name">
+        <button id="create-game">Create Game</button>
+        <button id="join-game">Join Game</button>
+    </div>
+
+    <div id="game-status">Enter a room name to begin.</div>
+    <div id="game-board"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
