@@ -101,7 +101,6 @@ def make_move(data):
                 # Check for winner
                 if check_winner(board, color):
                     emit('game_over', {'winner': color}, to=room)
-                    del games[room]
                 return
         
         # If column is full, notify the player
@@ -111,6 +110,28 @@ def make_move(data):
         # Not this player's turn
         print(f"ERROR: Not player's turn. Current turn is: {games[room]['turn']}")
         emit('error', {'message': f"It is not your turn. Current turn: {games[room]['player_colors'][games[room]['turn']]}"})
+
+@socketio.on('rematch')
+def rematch(data):
+    """Handles a player's request for a rematch."""
+    room = data['room']
+    if room in games:
+        # Notify the other player of the rematch request
+        other_player_sid = next(p for p in games[room]['players'] if p != request.sid)
+        emit('rematch_request', {'room': room}, to=other_player_sid)
+
+@socketio.on('reset_game')
+def reset_game(data):
+    """Resets the game state for a rematch."""
+    room = data['room']
+    if room in games:
+        # Reset the board
+        games[room]['board'] = [['' for _ in range(7)] for _ in range(6)]
+        # Reset the turn to the red player
+        red_player_sid = [p for p, c in games[room]['player_colors'].items() if c == 'red'][0]
+        games[room]['turn'] = red_player_sid
+        # Notify both players that the game has been reset
+        emit('game_reset', {'turn': 'red'}, to=room)
 
 def check_winner(board, color):
     """Checks if the current player has won the game."""
