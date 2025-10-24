@@ -6,9 +6,9 @@ Connect 4 is a two-player connection game where the objective is to be the first
 Multiplayer aspect: This is a Python-based Connect 4 game that allows two players to connect to a server and play against each other in real-time.
 
 II. Technology Used:
-Frontend: html, css js
-Backend: Python flask
-Client communicatio: sockets
+-> Frontend: html, css js
+-> Backend: Python flask.
+-> Client communicatio: sockets.
 
 III. Features
 
